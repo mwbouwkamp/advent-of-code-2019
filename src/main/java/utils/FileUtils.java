@@ -11,7 +11,23 @@ public class FileUtils {
 
     private static final String PATH = "E:\\adventOfCode2019\\";
 
-    public static List<Long> getNumbersFromInput(String filename) throws FileNotFoundException {
+    public static List<String> getStringFromInput(String filename) throws FileNotFoundException {
+        File file = new File(PATH + filename);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        return reader.lines()
+                .collect(Collectors.toList());
+    }
+
+    public static List<Integer> getIntegersFromInput(String filename) throws FileNotFoundException {
+        File file = new File(PATH + filename);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        return reader.lines()
+                .mapToInt(Integer::parseInt)
+                .boxed()
+                .collect(Collectors.toList());
+    }
+
+    public static List<Long> getLongsFromInput(String filename) throws FileNotFoundException {
         File file = new File(PATH + filename);
         BufferedReader reader = new BufferedReader(new FileReader(file));
         return reader.lines()
