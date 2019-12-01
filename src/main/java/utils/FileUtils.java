@@ -12,15 +12,13 @@ public class FileUtils {
     private static final String PATH = "E:\\adventOfCode2019\\";
 
     public static List<String> getStringFromInput(String filename) throws FileNotFoundException {
-        File file = new File(PATH + filename);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        BufferedReader reader = getBufferedReaderFromFile(filename);
         return reader.lines()
                 .collect(Collectors.toList());
     }
 
     public static List<Integer> getIntegersFromInput(String filename) throws FileNotFoundException {
-        File file = new File(PATH + filename);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        BufferedReader reader = getBufferedReaderFromFile(filename);
         return reader.lines()
                 .mapToInt(Integer::parseInt)
                 .boxed()
@@ -28,11 +26,15 @@ public class FileUtils {
     }
 
     public static List<Long> getLongsFromInput(String filename) throws FileNotFoundException {
-        File file = new File(PATH + filename);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        BufferedReader reader = getBufferedReaderFromFile(filename);
         return reader.lines()
                 .mapToLong(Long::parseLong)
                 .boxed()
                 .collect(Collectors.toList());
+    }
+
+    private static BufferedReader getBufferedReaderFromFile(String filename) throws FileNotFoundException {
+        File file = new File(PATH + filename);
+        return new BufferedReader(new FileReader(file));
     }
 }
