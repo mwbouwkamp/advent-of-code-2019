@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,4 +38,5 @@ public class FileUtils {
         File file = new File(PATH + filename);
         return new BufferedReader(new FileReader(file));
     }
+
 }

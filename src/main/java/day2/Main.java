@@ -1,19 +1,17 @@
 package day2;
 
 import utils.FileUtils;
+import utils.InputUtils;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
         String input = FileUtils.getStringFromInput("input2.txt").get(0);
-        List<Integer> numbers = getNumbersFromInput(input);
+        List<Integer> numbers = InputUtils.getNumbersFromCSVInput(input);
 
         //Day 1
         List<Integer> numbersInput = changeVerbNoun(numbers, 12, 2);
@@ -43,10 +41,4 @@ public class Main {
         return numbersInput;
     }
 
-    private static List<Integer> getNumbersFromInput(String input) {
-        return Arrays.stream(input.split(","))
-                .mapToInt(Integer::parseInt)
-                .boxed()
-                .collect(Collectors.toList());
-    }
 }
