@@ -13,4 +13,10 @@ public class InputUtils {
                 .boxed()
                 .collect(Collectors.toList());
     }
+
+    public static List<String> getStringsFromCSVInput(String input) {
+        return Arrays.stream(input.split(","))
+                .filter(s -> s.length() > 0)
+                .collect(Collectors.toList());
+    }
 }
