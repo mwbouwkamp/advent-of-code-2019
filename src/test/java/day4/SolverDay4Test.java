@@ -37,11 +37,27 @@ class SolverDay4Test {
             "'1,1',true"
     })
     void integerListAscending(String input, boolean expected) {
-        List<Integer> intList = Arrays.stream(input.split(","))
-                .mapToInt(Integer::parseInt)
-                .boxed()
-                .collect(Collectors.toList());
+        List<Integer> intList = getIntegerListFromCSVString(input);
         boolean result = new SolverDay4().integerListAscending(intList);
+        assertEquals(expected, result);
+    }
+
+    private List<Integer> getIntegerListFromCSVString(String input) {
+        return Arrays.stream(input.split(","))
+                    .mapToInt(Integer::parseInt)
+                    .boxed()
+                    .collect(Collectors.toList());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'1',false",
+            "'1,1',true",
+            "'1,1,1',true"
+    })
+    void doubleIntegers(String input, boolean expected) {
+        List<Integer> intList = getIntegerListFromCSVString(input);
+        boolean result = new SolverDay4().doubleIntegers(intList);
         assertEquals(expected, result);
     }
 }
