@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Solver {
+public class SolverDay4 {
 
     public List<Integer> getValidPasswords(int start, int end) {
         List<Integer> validPasswords = new ArrayList<>();

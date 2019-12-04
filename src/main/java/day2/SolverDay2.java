@@ -2,7 +2,7 @@ package day2;
 
 import java.util.List;
 
-public class Solver {
+public class SolverDay2 {
 
     public List<Integer> processIntCode(List<Integer> numbers) {
         int opCode = 0;

@@ -2,7 +2,7 @@ package day1;
 
 import java.util.List;
 
-public class Solver {
+public class SolverDay1 {
     public long calculateTotalFuel(List<Long> numbers) {
         return numbers.stream()
                 .map(this::calculateFuel)

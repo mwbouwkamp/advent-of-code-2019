@@ -9,18 +9,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SolverTest {
+class SolverDay1Test {
 
     public static final List<Long> EMPTY_LIST = new ArrayList<>();
 
     @Test
     void calculate_TotalFuel_should_return_default_value_for_empty_list() {
-        assertEquals(-1, new Solver().calculateTotalFuel(EMPTY_LIST));
+        assertEquals(-1, new SolverDay1().calculateTotalFuel(EMPTY_LIST));
     }
 
     @Test
     void calculateTotalFuelIncludingFuelForTransport_should_return_default_value_for_empty_list() {
-        assertEquals(-1, new Solver().calculateTotalFuelIncludingFuelForFuelTransport(EMPTY_LIST));
+        assertEquals(-1, new SolverDay1().calculateTotalFuelIncludingFuelForFuelTransport(EMPTY_LIST));
     }
 
     @ParameterizedTest
@@ -34,7 +34,7 @@ class SolverTest {
             "12, 2"
     })
     void calculateFuel_should_return_fuel(long input, long expected) {
-        assertEquals(expected, new Solver().calculateFuel(input));
+        assertEquals(expected, new SolverDay1().calculateFuel(input));
     }
 
     @ParameterizedTest
@@ -47,7 +47,7 @@ class SolverTest {
             "105, 148" //105 -> 33 -> 9 -> 1        --> 105 + 33 + 9 + 1 = 148
     })
     void getAdditionalFuelRequired(long input, long expected) {
-        assertEquals(expected, new Solver().getAdditionalFuelRequired(input));
+        assertEquals(expected, new SolverDay1().getAdditionalFuelRequired(input));
     }
 
 }

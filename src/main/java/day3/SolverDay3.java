@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Solver {
+public class SolverDay3 {
 
     public List<Point> extractCoordinates(List<String> directions) {
         List<Point> coordinates = new ArrayList<>();
