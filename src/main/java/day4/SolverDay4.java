@@ -2,7 +2,6 @@ package day4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +36,7 @@ public class SolverDay4 {
                 .map(i -> Integer.toString(i))
                 .reduce((a, b) -> a + b)
                 .orElse("");
-        numbersString = getWithOnlySingleAndDoubleValues(numbersString);
+        numbersString = removeTrippleAndHigher(numbersString);
         List<Integer> reducedNumbers = Arrays.stream(numbersString.split(""))
                 .filter(s -> s.length() > 0)
                 .mapToInt(Integer::parseInt)
@@ -46,7 +45,7 @@ public class SolverDay4 {
         return doubleIntegers(reducedNumbers);
     }
 
-    public String getWithOnlySingleAndDoubleValues(String numbersString) {
+    public String removeTrippleAndHigher(String numbersString) {
         return numbersString
                 .replaceAll("(\\d)\\1\\1\\1\\1\\1", "")
                 .replaceAll("(\\d)\\1\\1\\1\\1", "")
