@@ -46,16 +46,21 @@ public class SolverDay4 {
     }
 
     public String removeTrippleAndHigher(String numbersString) {
-        return numbersString
-                .replaceAll("(\\d)\\1\\1\\1\\1\\1", "")
-                .replaceAll("(\\d)\\1\\1\\1\\1", "")
-                .replaceAll("(\\d)\\1\\1\\1", "")
-                .replaceAll("(\\d)\\1\\1", "");
+        List<String> patterns = new ArrayList<>();
+        StringBuilder patternBuilder = new StringBuilder("(\\d)\\1");
+        for (int i = 0; i < numbersString.length(); i++) {
+            patternBuilder.append("\\1");
+            patterns.add(patternBuilder.toString());
+        }
+        for (int i = patterns.size() - 1; i >=0; i--) {
+            numbersString = numbersString.replaceAll(patterns.get(i), "");
+        }
+        return numbersString;
     }
 
     public boolean doubleIntegers(List<Integer> numbers) {
         for (int i = 1; i < numbers.size(); i++) {
-            if (numbers.get(i) == numbers.get(i - 1)) {
+            if (numbers.get(i).equals(numbers.get(i - 1))) {
                 return true;
             }
         }
@@ -64,7 +69,7 @@ public class SolverDay4 {
 
     public boolean integerListAscending(List<Integer> numbers) {
         int curInt = numbers.get(0);
-        for (int i = 1; i< numbers.size(); i++) {
+        for (int i = 1; i < numbers.size(); i++) {
             if (numbers.get(i) < numbers.get(i - 1)) {
                 return false;
             }
