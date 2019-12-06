@@ -4,7 +4,7 @@ import java.util.List;
 
 public class SolverDay2 {
 
-    public List<Integer> processIntCode(List<Integer> numbers) {
+    public List<Integer> intComputer(List<Integer> numbers) {
         int opCode = 0;
         int pointer = 0;
         while(true) {
@@ -24,7 +24,7 @@ public class SolverDay2 {
                 break;
             }
             else {
-                throw new IllegalArgumentException("Not a valid list of numbers");
+                throw new IllegalArgumentException("Not a valid list of numbers (last opCode: " + opCode + ")");
             }
             pointer = movePosition(pointer, numbers, 1);
         }

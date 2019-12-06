@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static testUtils.TestUtils.getIntegerListFromCSVString;
 
 class SolverDay4Test {
 
@@ -40,13 +41,6 @@ class SolverDay4Test {
         List<Integer> intList = getIntegerListFromCSVString(input);
         boolean result = new SolverDay4().integerListAscending(intList);
         assertEquals(expected, result);
-    }
-
-    private List<Integer> getIntegerListFromCSVString(String input) {
-        return Arrays.stream(input.split(","))
-                    .mapToInt(Integer::parseInt)
-                    .boxed()
-                    .collect(Collectors.toList());
     }
 
     @ParameterizedTest

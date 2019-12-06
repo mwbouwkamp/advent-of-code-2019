@@ -15,7 +15,7 @@ public class Day2 {
 
         //Day 1
         List<Integer> numbersInput = changeVerbNoun(numbers, 12, 2);
-        List<Integer> numbersResult = new SolverDay2().processIntCode(numbersInput);
+        List<Integer> numbersResult = new SolverDay2().intComputer(numbersInput);
         System.out.println("Solution 2.1: " + numbersResult.get(0));
 
         //Day 2
@@ -25,7 +25,7 @@ public class Day2 {
         for (i = 0; i < 100; i++) {
             for (j = 0; j < 100; j++) {
                 numbersInput = changeVerbNoun(numbers, i, j);
-                numbersResult = new SolverDay2().processIntCode(numbersInput);
+                numbersResult = new SolverDay2().intComputer(numbersInput);
                 if (numbersResult.get(0) == 19690720) {
                     break OUTER;
                 }
