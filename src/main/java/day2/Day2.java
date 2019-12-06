@@ -10,7 +10,7 @@ import java.util.List;
 public class Day2 {
 
     public static void main(String[] args) throws FileNotFoundException {
-        String input = FileUtils.getStringFromInput("input2.txt").get(0);
+        String input = FileUtils.getStringsFromInput("input2.txt").get(0);
         List<Integer> numbers = InputUtils.getNumbersFromCSVInput(input);
 
         //Day 1

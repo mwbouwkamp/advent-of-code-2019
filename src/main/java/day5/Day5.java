@@ -1,6 +1,5 @@
 package day5;
 
-import day2.SolverDay2;
 import utils.FileUtils;
 import utils.InputUtils;
 
@@ -10,7 +9,7 @@ import java.util.List;
 public class Day5 {
 
     public static void main(String[] args) throws FileNotFoundException {
-        String input = FileUtils.getStringFromInput("input5.txt").get(0);
+        String input = FileUtils.getStringsFromInput("input5.txt").get(0);
         List<Integer> numbers = InputUtils.getNumbersFromCSVInput(input);
 
         int inputCode = 5;

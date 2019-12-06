@@ -12,7 +12,7 @@ public class FileUtils {
 
     private static final String PATH = "E:\\adventOfCode2019\\";
 
-    public static List<String> getStringFromInput(String filename) throws FileNotFoundException {
+    public static List<String> getStringsFromInput(String filename) throws FileNotFoundException {
         BufferedReader reader = getBufferedReaderFromFile(filename);
         return reader.lines()
                 .collect(Collectors.toList());
