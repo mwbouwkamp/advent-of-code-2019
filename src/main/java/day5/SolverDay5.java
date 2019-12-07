@@ -52,9 +52,6 @@ public class SolverDay5 {
                         pointer = secondNum;
                         dontMovePointerAtEnd = true;
                     }
-//                    else {
-//                        pointer = movePosition(pointer, numbers, 1);
-//                    }
                     break;
                 case 6:
                     pointer = movePosition(pointer, numbers, 1);
@@ -65,9 +62,6 @@ public class SolverDay5 {
                         pointer = secondNum;
                         dontMovePointerAtEnd = true;
                     }
-//                    else {
-//                        pointer = movePosition(pointer, numbers, 1);
-//                    }
                     break;
                 case 7:
                     pointer = movePosition(pointer, numbers, 1);
