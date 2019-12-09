@@ -70,7 +70,9 @@ public class IntComputer extends Thread {
         int pointer = 0;
         while (true) {
             while (running) {
-                while(running) {
+                while(running)
+                {
+                    System.out.println(name + " " + phaseSetting + " " + inputCode);
                     OpCode opCode = new OpCode(numbers.get(pointer));
                     boolean dontMovePointerAtEnd = false;
                     switch (opCode.getInstruction()) {
@@ -216,5 +218,13 @@ public class IntComputer extends Thread {
             }
         }
     }
+
+    public int runCycle(int resultE) {
+        setInputCode(resultE);
+        setRunning();
+        waitForIntcomputer();
+        return getIntComputerOutput().get(getIntComputerOutput().size() - 1);
+    }
+
 
 }

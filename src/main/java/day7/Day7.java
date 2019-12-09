@@ -13,15 +13,14 @@ public class Day7 {
 
     public static void main(String[] args) throws FileNotFoundException {
         String input = FileUtils.getStringsFromInput("input7.txt").get(0);
-//        input = "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5";
         List<Integer> numbers = InputUtils.getNumbersFromCSVInput(input);
 
-        System.out.println("Solution 7.1: " + new SolverDay7(numbers, 5, 0).getMaxOutput());
+//        System.out.println("Solution 7.1: " + new SolverDay7(numbers, 5, 0).getMaxOutput());
 
 //        testCases();
 
 
-//        System.out.println(new SolverDay7(numbers, 5, 5).getMaxOutputWithFeedback());
+        System.out.println(new SolverDay7(numbers, 5, 5).getMaxOutputWithFeedback());
 
 
 

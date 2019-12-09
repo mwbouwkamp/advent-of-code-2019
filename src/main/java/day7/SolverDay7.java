@@ -1,5 +1,6 @@
 package day7;
 
+import utils.InputUtils;
 import utils.IntComputer;
 
 import java.util.ArrayList;
@@ -55,7 +56,8 @@ public class SolverDay7 {
 
     public int getMaxOutputWithFeedback() {
         int[] phaseSettings = new int[]{9,8,7,6,5};
-//        int[] phaseSettings = new int[]{9,7,8,5,6};
+        String input = "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5";
+        numbers = InputUtils.getNumbersFromCSVInput(input);
 
         IntComputer intComputerA = new IntComputer.IntComputerBuilder(numbers)
                 .inputCode(0)
@@ -66,87 +68,43 @@ public class SolverDay7 {
         intComputerA.start();
         IntComputer intComputerB = new IntComputer.IntComputerBuilder(numbers)
                 .inputCode(0)
-                .phaseSetting(phaseSettings[0])
+                .phaseSetting(phaseSettings[1])
                 .isHaltable()
                 .name("B")
                 .build();
         intComputerB.start();
         IntComputer intComputerC = new IntComputer.IntComputerBuilder(numbers)
                 .inputCode(0)
-                .phaseSetting(phaseSettings[0])
+                .phaseSetting(phaseSettings[2])
                 .isHaltable()
                 .name("C")
                 .build();
         intComputerC.start();
         IntComputer intComputerD = new IntComputer.IntComputerBuilder(numbers)
                 .inputCode(0)
-                .phaseSetting(phaseSettings[0])
+                .phaseSetting(phaseSettings[3])
                 .isHaltable()
                 .name("D")
                 .build();
         intComputerD.start();
         IntComputer intComputerE = new IntComputer.IntComputerBuilder(numbers)
                 .inputCode(0)
-                .phaseSetting(phaseSettings[0])
+                .phaseSetting(phaseSettings[4])
                 .isHaltable()
                 .name("E")
                 .build();
         intComputerE.start();
-        int resultA = 0;
-        int resultB = 0;
-        int resultC = 0;
-        int resultD = 0;
         int resultE = 0;
         for (int i = 0; i < 5; i++) {
             System.out.print("--- Cycle: " + i);
 
-            updateIntComputer(intComputerA, resultE);
-            waitForResult(intComputerA);
-            resultA = intComputerA.getIntComputerOutput().get(intComputerA.getIntComputerOutput().size() - 1);
-
-            updateIntComputer(intComputerB, resultA);
-            waitForResult(intComputerB);
-            resultB = intComputerB.getIntComputerOutput().get(intComputerB.getIntComputerOutput().size() - 1);
-
-            updateIntComputer(intComputerC, resultB);
-            waitForResult(intComputerC);
-            resultC = intComputerC.getIntComputerOutput().get(intComputerC.getIntComputerOutput().size() - 1);
-
-            updateIntComputer(intComputerD, resultC);
-            waitForResult(intComputerD);
-            resultD = intComputerD.getIntComputerOutput().get(intComputerD.getIntComputerOutput().size() - 1);
-
-            updateIntComputer(intComputerE, resultD);
-            waitForResult(intComputerE);
-            resultE = intComputerE.getIntComputerOutput().get(intComputerE.getIntComputerOutput().size() - 1);
+            int resultA = intComputerA.runCycle(resultE);
+            int resultB = intComputerB.runCycle(resultA);
+            int resultC = intComputerC.runCycle(resultB);
+            int resultD = intComputerD.runCycle(resultC);
+            resultE = intComputerE.runCycle(resultD);
         }
         return resultE;
-    }
-
-    private void waitForResult(IntComputer intComputerA) {
-        synchronized (intComputerA) {
-            try {
-                intComputerA.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void updateIntComputer(IntComputer intComputer, int inputCode) {
-        intComputer.setInputCode(inputCode);
-        intComputer.setRunning();
-    }
-
-    private IntComputer initializeIntComputer(int phaseSetting, int result, String name) {
-        IntComputer intComputer = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(result)
-                .phaseSetting(phaseSetting)
-                .isHaltable()
-                .name(name)
-                .build();
-        intComputer.start();
-        return intComputer;
     }
 
     public int getThrusterOutput(List<Integer> numbers, List<Integer> phaseSettings) {
