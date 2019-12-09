@@ -54,59 +54,6 @@ public class SolverDay7 {
                 .orElse(-1);
     }
 
-    public int getMaxOutputWithFeedback() {
-        int[] phaseSettings = new int[]{9,8,7,6,5};
-        String input = "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5";
-        numbers = InputUtils.getNumbersFromCSVInput(input);
-
-        IntComputer intComputerA = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(0)
-                .phaseSetting(phaseSettings[0])
-                .isHaltable()
-                .name("A")
-                .build();
-        intComputerA.start();
-        IntComputer intComputerB = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(0)
-                .phaseSetting(phaseSettings[1])
-                .isHaltable()
-                .name("B")
-                .build();
-        intComputerB.start();
-        IntComputer intComputerC = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(0)
-                .phaseSetting(phaseSettings[2])
-                .isHaltable()
-                .name("C")
-                .build();
-        intComputerC.start();
-        IntComputer intComputerD = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(0)
-                .phaseSetting(phaseSettings[3])
-                .isHaltable()
-                .name("D")
-                .build();
-        intComputerD.start();
-        IntComputer intComputerE = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(0)
-                .phaseSetting(phaseSettings[4])
-                .isHaltable()
-                .name("E")
-                .build();
-        intComputerE.start();
-        int resultE = 0;
-        for (int i = 0; i < 5; i++) {
-            System.out.print("--- Cycle: " + i);
-
-            int resultA = intComputerA.runCycle(resultE);
-            int resultB = intComputerB.runCycle(resultA);
-            int resultC = intComputerC.runCycle(resultB);
-            int resultD = intComputerD.runCycle(resultC);
-            resultE = intComputerE.runCycle(resultD);
-        }
-        return resultE;
-    }
-
     public int getThrusterOutput(List<Integer> numbers, List<Integer> phaseSettings) {
         int amplifierInput = 0;
         for (int phaseSetting: phaseSettings) {
@@ -120,6 +67,60 @@ public class SolverDay7 {
             amplifierInput = intComputer.getIntComputerOutput().get(0);
         }
         return amplifierInput;
+    }
+
+    public int getMaxOutputWithFeedback() {
+        return phaseSettingsCombinations.stream()
+                .mapToInt(ps -> getThrusterOutputWithFeedback(numbers, ps))
+                .max()
+                .orElse(-1);
+    }
+
+    public int getThrusterOutputWithFeedback(List<Integer> numbers, List<Integer> phaseSettings) {
+        IntComputer intComputerA = new IntComputer.IntComputerBuilder(numbers)
+                .inputCode(0)
+                .phaseSetting(phaseSettings.get(0))
+                .isHaltable()
+                .name("A")
+                .build();
+        intComputerA.start();
+        IntComputer intComputerB = new IntComputer.IntComputerBuilder(numbers)
+                .inputCode(0)
+                .phaseSetting(phaseSettings.get(1))
+                .isHaltable()
+                .name("B")
+                .build();
+        intComputerB.start();
+        IntComputer intComputerC = new IntComputer.IntComputerBuilder(numbers)
+                .inputCode(0)
+                .phaseSetting(phaseSettings.get(2))
+                .isHaltable()
+                .name("C")
+                .build();
+        intComputerC.start();
+        IntComputer intComputerD = new IntComputer.IntComputerBuilder(numbers)
+                .inputCode(0)
+                .phaseSetting(phaseSettings.get(3))
+                .isHaltable()
+                .name("D")
+                .build();
+        intComputerD.start();
+        IntComputer intComputerE = new IntComputer.IntComputerBuilder(numbers)
+                .inputCode(0)
+                .phaseSetting(phaseSettings.get(4))
+                .isHaltable()
+                .name("E")
+                .build();
+        intComputerE.start();
+        int resultE = 0;
+        while(!intComputerA.hasTerminated()) {
+            int resultA = intComputerA.runCycle(resultE);
+            int resultB = intComputerB.runCycle(resultA);
+            int resultC = intComputerC.runCycle(resultB);
+            int resultD = intComputerD.runCycle(resultC);
+            resultE = intComputerE.runCycle(resultD);
+        }
+        return resultE;
     }
 
     private class Pair {

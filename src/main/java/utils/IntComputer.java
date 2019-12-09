@@ -17,6 +17,7 @@ public class IntComputer extends Thread {
 
     private boolean running;
     private boolean phaseSettingUsed;
+    private boolean terminated;
 
     public IntComputer(List<Integer> numbers, int inputCode, int phaseSetting, boolean haltable, String name) {
         this.numbers = new ArrayList<>(numbers);
@@ -69,110 +70,108 @@ public class IntComputer extends Thread {
     public void run() {
         int pointer = 0;
         while (true) {
-            while (running) {
-                while(running)
-                {
-                    System.out.println(name + " " + phaseSetting + " " + inputCode);
-                    OpCode opCode = new OpCode(numbers.get(pointer));
-                    boolean dontMovePointerAtEnd = false;
-                    switch (opCode.getInstruction()) {
-                        case 1:
-                            pointer = movePosition(pointer, numbers, 1);
-                            int firstNum = getNum(numbers, pointer, opCode.getModeInput1());
-                            pointer = movePosition(pointer, numbers, 1);
-                            int secondNum = getNum(numbers, pointer, opCode.getModeInput2());
-                            pointer = movePosition(pointer, numbers, 1);
-                            if ((opCode.getModeResult() == 0)) {
-                                numbers.set(numbers.get(pointer), firstNum + secondNum);
-                            } else {
-                                numbers.set(pointer, firstNum + secondNum);
-                            }
-                            break;
-                        case 2:
-                            pointer = movePosition(pointer, numbers, 1);
-                            firstNum = getNum(numbers, pointer, opCode.getModeInput1());
-                            pointer = movePosition(pointer, numbers, 1);
-                            secondNum = getNum(numbers, pointer, opCode.getModeInput2());
-                            pointer = movePosition(pointer, numbers, 1);
-                            if ((opCode.getModeResult() == 0)) {
-                                numbers.set(numbers.get(pointer), firstNum * secondNum);
-                            } else {
-                                numbers.set(pointer, firstNum * secondNum);
-                            }
-                            break;
-                        case 3:
-                            pointer = movePosition(pointer, numbers, 1);
-                            if (phaseSettingUsed) {
-                                numbers.set(numbers.get(pointer), inputCode);
-                            }
-                            else {
-                                numbers.set(numbers.get(pointer), phaseSetting);
-                                phaseSettingUsed = true;
-                            }
-                            break;
-                        case 4:
-                            if (name.equals("A")) {
-                                System.out.println();
-                            }
-                            pointer = movePosition(pointer, numbers, 1);
-                            intComputerOutput.add(numbers.get(numbers.get(pointer)));
-                            if (intComputerOutput.size() > 0) {
-                                System.out.println(intComputerOutput.toString());
-                            }
-                            if (haltable) {
-                                haltRunning();
-                            }
-                            synchronized (this) {
-                                notify();
-                            }
-                            break;
-                        case 5:
-                            pointer = movePosition(pointer, numbers, 1);
-                            firstNum = getNum(numbers, pointer, opCode.getModeInput1());
-                            pointer = movePosition(pointer, numbers, 1);
-                            secondNum = getNum(numbers, pointer, opCode.getModeInput2());
-                            if (firstNum != 0) {
-                                pointer = secondNum;
-                                dontMovePointerAtEnd = true;
-                            }
-                            break;
-                        case 6:
-                            pointer = movePosition(pointer, numbers, 1);
-                            firstNum = getNum(numbers, pointer, opCode.getModeInput1());
-                            pointer = movePosition(pointer, numbers, 1);
-                            secondNum = getNum(numbers, pointer, opCode.getModeInput2());
-                            if (firstNum == 0) {
-                                pointer = secondNum;
-                                dontMovePointerAtEnd = true;
-                            }
-                            break;
-                        case 7:
-                            pointer = movePosition(pointer, numbers, 1);
-                            firstNum = getNum(numbers, pointer, opCode.getModeInput1());
-                            pointer = movePosition(pointer, numbers, 1);
-                            secondNum = getNum(numbers, pointer, opCode.getModeInput2());
-                            pointer = movePosition(pointer, numbers, 1);
-                            int toStore = firstNum < secondNum ? 1 : 0;
-                            numbers.set(numbers.get(pointer), toStore);
-                            break;
-                        case 8:
-                            pointer = movePosition(pointer, numbers, 1);
-                            firstNum = getNum(numbers, pointer, opCode.getModeInput1());
-                            pointer = movePosition(pointer, numbers, 1);
-                            secondNum = getNum(numbers, pointer, opCode.getModeInput2());
-                            pointer = movePosition(pointer, numbers, 1);
-                            toStore = firstNum == secondNum ? 1 : 0;
-                            numbers.set(numbers.get(pointer), toStore);
-                            break;
-                        case 99:
-//                            System.out.println("IntComputer terminated: " + name);
-                            return;
-                        default:
-                            throw new IllegalArgumentException("Opcode not allowed: " + opCode.getInstruction());
-                    }
-                    if (!dontMovePointerAtEnd) {
+            if (running)
+            {
+                OpCode opCode = new OpCode(numbers.get(pointer));
+                boolean dontMovePointerAtEnd = false;
+                switch (opCode.getInstruction()) {
+                    case 1:
                         pointer = movePosition(pointer, numbers, 1);
-                    }
+                        int firstNum = getNum(numbers, pointer, opCode.getModeInput1());
+                        pointer = movePosition(pointer, numbers, 1);
+                        int secondNum = getNum(numbers, pointer, opCode.getModeInput2());
+                        pointer = movePosition(pointer, numbers, 1);
+                        if ((opCode.getModeResult() == 0)) {
+                            numbers.set(numbers.get(pointer), firstNum + secondNum);
+                        } else {
+                            numbers.set(pointer, firstNum + secondNum);
+                        }
+                        break;
+                    case 2:
+                        pointer = movePosition(pointer, numbers, 1);
+                        firstNum = getNum(numbers, pointer, opCode.getModeInput1());
+                        pointer = movePosition(pointer, numbers, 1);
+                        secondNum = getNum(numbers, pointer, opCode.getModeInput2());
+                        pointer = movePosition(pointer, numbers, 1);
+                        if ((opCode.getModeResult() == 0)) {
+                            numbers.set(numbers.get(pointer), firstNum * secondNum);
+                        } else {
+                            numbers.set(pointer, firstNum * secondNum);
+                        }
+                        break;
+                    case 3:
+                        pointer = movePosition(pointer, numbers, 1);
+                        if (phaseSettingUsed) {
+                            numbers.set(numbers.get(pointer), inputCode);
+                        }
+                        else {
+                            numbers.set(numbers.get(pointer), phaseSetting);
+                            phaseSettingUsed = true;
+                        }
+                        break;
+                    case 4:
+                        pointer = movePosition(pointer, numbers, 1);
+                        intComputerOutput.add(numbers.get(numbers.get(pointer)));
+                        if (haltable) {
+                            haltRunning();
+                        }
+                        synchronized (this) {
+                            notify();
+                        }
+                        break;
+                    case 5:
+                        pointer = movePosition(pointer, numbers, 1);
+                        firstNum = getNum(numbers, pointer, opCode.getModeInput1());
+                        pointer = movePosition(pointer, numbers, 1);
+                        secondNum = getNum(numbers, pointer, opCode.getModeInput2());
+                        if (firstNum != 0) {
+                            pointer = secondNum;
+                            dontMovePointerAtEnd = true;
+                        }
+                        break;
+                    case 6:
+                        pointer = movePosition(pointer, numbers, 1);
+                        firstNum = getNum(numbers, pointer, opCode.getModeInput1());
+                        pointer = movePosition(pointer, numbers, 1);
+                        secondNum = getNum(numbers, pointer, opCode.getModeInput2());
+                        if (firstNum == 0) {
+                            pointer = secondNum;
+                            dontMovePointerAtEnd = true;
+                        }
+                        break;
+                    case 7:
+                        pointer = movePosition(pointer, numbers, 1);
+                        firstNum = getNum(numbers, pointer, opCode.getModeInput1());
+                        pointer = movePosition(pointer, numbers, 1);
+                        secondNum = getNum(numbers, pointer, opCode.getModeInput2());
+                        pointer = movePosition(pointer, numbers, 1);
+                        int toStore = firstNum < secondNum ? 1 : 0;
+                        numbers.set(numbers.get(pointer), toStore);
+                        break;
+                    case 8:
+                        pointer = movePosition(pointer, numbers, 1);
+                        firstNum = getNum(numbers, pointer, opCode.getModeInput1());
+                        pointer = movePosition(pointer, numbers, 1);
+                        secondNum = getNum(numbers, pointer, opCode.getModeInput2());
+                        pointer = movePosition(pointer, numbers, 1);
+                        toStore = firstNum == secondNum ? 1 : 0;
+                        numbers.set(numbers.get(pointer), toStore);
+                        break;
+                    case 99:
+                        terminated = true;
+                        return;
+                    default:
+                        throw new IllegalArgumentException("Opcode not allowed: " + opCode.getInstruction());
+                }
+                if (!dontMovePointerAtEnd) {
+                    pointer = movePosition(pointer, numbers, 1);
+                }
+            }
+            else {
+                try {
+                    sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -205,10 +204,6 @@ public class IntComputer extends Thread {
         this.inputCode = inputCode;
     }
 
-    public boolean isRunning() {
-        return running;
-    }
-
     public void waitForIntcomputer() {
         synchronized (this) {
             try {
@@ -219,11 +214,15 @@ public class IntComputer extends Thread {
         }
     }
 
-    public int runCycle(int resultE) {
-        setInputCode(resultE);
+    public int runCycle(int result) {
+        setInputCode(result);
         setRunning();
         waitForIntcomputer();
         return getIntComputerOutput().get(getIntComputerOutput().size() - 1);
+    }
+
+    public boolean hasTerminated() {
+        return terminated;
     }
 
 
