@@ -13,6 +13,6 @@ public class Day5 {
         List<Integer> numbers = InputUtils.getNumbersFromCSVInput(input);
 
         int inputCode = 5;
-        List<Integer> numbersResult = new SolverDay5().intComputer(numbers, inputCode);
+        System.out.println(new SolverDay5().solve(numbers, inputCode));
     }
 }
