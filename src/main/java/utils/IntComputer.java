@@ -10,6 +10,7 @@ public class IntComputer extends Thread {
     private List<Integer> numbers;
     private int inputCode;
     private int phaseSetting;
+    private int relativeBase;
     private boolean haltable;
     private String name;
 
@@ -23,6 +24,7 @@ public class IntComputer extends Thread {
         this.numbers = new ArrayList<>(numbers);
         this.inputCode = inputCode;
         this.phaseSetting = phaseSetting;
+        this.relativeBase = 0;
         this.haltable = haltable;
         this.name = name;
         this.intComputerOutput = new ArrayList<>();
@@ -157,6 +159,10 @@ public class IntComputer extends Thread {
                         toStore = firstNum == secondNum ? 1 : 0;
                         numbers.set(numbers.get(pointer), toStore);
                         break;
+                    case 9:
+                        pointer = movePosition(pointer, numbers, 1);
+                        relativeBase += numbers.get(pointer);
+                        break;
                     case 99:
                         terminated = true;
                         return;
@@ -183,9 +189,21 @@ public class IntComputer extends Thread {
     }
 
     private int getNum(List<Integer> numbers, int pointer, int mode) {
-        return (mode == 0)
-                ? numbers.get(numbers.get(pointer))
-                : numbers.get(pointer);
+        int num = 0;
+        switch (mode) {
+            case 0:
+                num = numbers.get(numbers.get(pointer));
+                break;
+            case 1:
+                num = numbers.get(pointer);
+                break;
+            case 2:
+                num = numbers.get(numbers.get(pointer + relativeBase));
+                break;
+            default:
+                throw new IllegalArgumentException("mode not supported: " + mode);
+        }
+        return num;
     }
 
     public List<Integer> getIntComputerOutput() {
