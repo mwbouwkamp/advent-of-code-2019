@@ -1,7 +1,5 @@
 package utils;
 
-import day5.OpCode;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -189,7 +187,6 @@ public class IntComputer extends Thread {
     }
 
     private int getNum(List<Integer> numbers, int pointer, int mode) {
-        int num = 0;
         switch (mode) {
             case 0:
                 num = numbers.get(numbers.get(pointer));
