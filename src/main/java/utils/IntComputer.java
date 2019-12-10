@@ -187,6 +187,7 @@ public class IntComputer extends Thread {
     }
 
     private int getNum(List<Integer> numbers, int pointer, int mode) {
+        int num;
         switch (mode) {
             case 0:
                 num = numbers.get(numbers.get(pointer));
