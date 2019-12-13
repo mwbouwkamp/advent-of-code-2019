@@ -111,7 +111,8 @@ public class IntComputer extends Thread {
                         break;
                     case 4:
                         pointer = movePosition(pointer, numbers, 1);
-                        intComputerOutput.add(numbers.get(numbers.get(pointer)));
+                        int num = getNum(numbers, pointer, opCode.getModeInput1());
+                        intComputerOutput.add(num);
                         if (haltable) {
                             haltRunning();
                         }
@@ -159,7 +160,8 @@ public class IntComputer extends Thread {
                         break;
                     case 9:
                         pointer = movePosition(pointer, numbers, 1);
-                        relativeBase += numbers.get(pointer);
+                        num = getNum(numbers, pointer, opCode.getModeInput1());
+                        relativeBase += num;
                         break;
                     case 99:
                         terminated = true;
@@ -183,7 +185,7 @@ public class IntComputer extends Thread {
 
     private int movePosition(int pointer, List<Integer> integerList, int steps) {
         pointer += steps;
-        return pointer  % integerList.size();
+        return pointer % integerList.size();
     }
 
     private int getNum(List<Integer> numbers, int pointer, int mode) {
@@ -196,10 +198,13 @@ public class IntComputer extends Thread {
                 num = numbers.get(pointer);
                 break;
             case 2:
-                num = numbers.get(numbers.get(pointer + relativeBase));
+                num = numbers.get(numbers.get(pointer) + relativeBase);
                 break;
             default:
                 throw new IllegalArgumentException("mode not supported: " + mode);
+        }
+        while (num > numbers.size()) {
+            numbers.add(0);
         }
         return num;
     }
