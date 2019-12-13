@@ -6,7 +6,6 @@ import java.awt.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Day10 {
     public static void main(String[] args) throws FileNotFoundException {
