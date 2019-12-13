@@ -5,20 +5,20 @@ import java.util.List;
 
 public class IntComputer extends Thread {
 
-    private List<Integer> numbers;
-    private int inputCode;
-    private int phaseSetting;
-    private int relativeBase;
+    private List<Long> numbers;
+    private long inputCode;
+    private long phaseSetting;
+    private long relativeBase;
     private boolean haltable;
     private String name;
 
-    List<Integer> intComputerOutput;
+    List<Long> intComputerOutput;
 
     private boolean running;
     private boolean phaseSettingUsed;
     private boolean terminated;
 
-    public IntComputer(List<Integer> numbers, int inputCode, int phaseSetting, boolean haltable, String name) {
+    public IntComputer(List<Long> numbers, long inputCode, long phaseSetting, boolean haltable, String name) {
         this.numbers = new ArrayList<>(numbers);
         this.inputCode = inputCode;
         this.phaseSetting = phaseSetting;
@@ -31,22 +31,22 @@ public class IntComputer extends Thread {
     }
 
     public static class IntComputerBuilder {
-        private List<Integer> numbers;
-        private int inputCode = 0;
-        private int phaseSetting = 0;
+        private List<Long> numbers;
+        private long inputCode = 0;
+        private long phaseSetting = 0;
         private boolean haltable = false;
         private String name = "";
 
-        public IntComputerBuilder(List<Integer> numbers) {
+        public IntComputerBuilder(List<Long> numbers) {
             this.numbers = numbers;
         }
 
-        public IntComputerBuilder inputCode(int inputCode) {
+        public IntComputerBuilder inputCode(long inputCode) {
             this.inputCode = inputCode;
             return this;
         }
 
-        public IntComputerBuilder phaseSetting(int phaseSetting) {
+        public IntComputerBuilder phaseSetting(long phaseSetting) {
             this.phaseSetting = phaseSetting;
             return this;
         }
@@ -73,16 +73,17 @@ public class IntComputer extends Thread {
             if (running)
             {
                 OpCode opCode = new OpCode(numbers.get(pointer));
+                int opCodeInstution = Math.toIntExact(opCode.getInstruction());
                 boolean dontMovePointerAtEnd = false;
-                switch (opCode.getInstruction()) {
+                switch (opCodeInstution) {
                     case 1:
                         pointer = movePosition(pointer, numbers, 1);
-                        int firstNum = getNum(numbers, pointer, opCode.getModeInput1());
+                        long firstNum = getNum(numbers, pointer, opCode.getModeInput1());
                         pointer = movePosition(pointer, numbers, 1);
-                        int secondNum = getNum(numbers, pointer, opCode.getModeInput2());
+                        long secondNum = getNum(numbers, pointer, opCode.getModeInput2());
                         pointer = movePosition(pointer, numbers, 1);
                         if ((opCode.getModeResult() == 0)) {
-                            numbers.set(numbers.get(pointer), firstNum + secondNum);
+                            numbers.set(Math.toIntExact(numbers.get(pointer)), firstNum + secondNum);
                         } else {
                             numbers.set(pointer, firstNum + secondNum);
                         }
@@ -94,7 +95,7 @@ public class IntComputer extends Thread {
                         secondNum = getNum(numbers, pointer, opCode.getModeInput2());
                         pointer = movePosition(pointer, numbers, 1);
                         if ((opCode.getModeResult() == 0)) {
-                            numbers.set(numbers.get(pointer), firstNum * secondNum);
+                            numbers.set(Math.toIntExact(numbers.get(pointer)), firstNum * secondNum);
                         } else {
                             numbers.set(pointer, firstNum * secondNum);
                         }
@@ -102,16 +103,16 @@ public class IntComputer extends Thread {
                     case 3:
                         pointer = movePosition(pointer, numbers, 1);
                         if (phaseSettingUsed) {
-                            numbers.set(numbers.get(pointer), inputCode);
+                            numbers.set(Math.toIntExact(numbers.get(pointer)), inputCode);
                         }
                         else {
-                            numbers.set(numbers.get(pointer), phaseSetting);
+                            numbers.set(Math.toIntExact(numbers.get(pointer)), phaseSetting);
                             phaseSettingUsed = true;
                         }
                         break;
                     case 4:
                         pointer = movePosition(pointer, numbers, 1);
-                        int num = getNum(numbers, pointer, opCode.getModeInput1());
+                        long num = getNum(numbers, pointer, opCode.getModeInput1());
                         intComputerOutput.add(num);
                         if (haltable) {
                             haltRunning();
@@ -126,7 +127,7 @@ public class IntComputer extends Thread {
                         pointer = movePosition(pointer, numbers, 1);
                         secondNum = getNum(numbers, pointer, opCode.getModeInput2());
                         if (firstNum != 0) {
-                            pointer = secondNum;
+                            pointer = Math.toIntExact(secondNum);
                             dontMovePointerAtEnd = true;
                         }
                         break;
@@ -136,7 +137,7 @@ public class IntComputer extends Thread {
                         pointer = movePosition(pointer, numbers, 1);
                         secondNum = getNum(numbers, pointer, opCode.getModeInput2());
                         if (firstNum == 0) {
-                            pointer = secondNum;
+                            pointer = Math.toIntExact(secondNum);
                             dontMovePointerAtEnd = true;
                         }
                         break;
@@ -146,8 +147,8 @@ public class IntComputer extends Thread {
                         pointer = movePosition(pointer, numbers, 1);
                         secondNum = getNum(numbers, pointer, opCode.getModeInput2());
                         pointer = movePosition(pointer, numbers, 1);
-                        int toStore = firstNum < secondNum ? 1 : 0;
-                        numbers.set(numbers.get(pointer), toStore);
+                        long toStore = firstNum < secondNum ? 1 : 0;
+                        numbers.set(Math.toIntExact(numbers.get(pointer)), toStore);
                         break;
                     case 8:
                         pointer = movePosition(pointer, numbers, 1);
@@ -156,7 +157,7 @@ public class IntComputer extends Thread {
                         secondNum = getNum(numbers, pointer, opCode.getModeInput2());
                         pointer = movePosition(pointer, numbers, 1);
                         toStore = firstNum == secondNum ? 1 : 0;
-                        numbers.set(numbers.get(pointer), toStore);
+                        numbers.set(Math.toIntExact(numbers.get(pointer)), toStore);
                         break;
                     case 9:
                         pointer = movePosition(pointer, numbers, 1);
@@ -183,33 +184,33 @@ public class IntComputer extends Thread {
         }
     }
 
-    private int movePosition(int pointer, List<Integer> integerList, int steps) {
+    private int movePosition(int pointer, List<Long> list, int steps) {
         pointer += steps;
-        return pointer % integerList.size();
+        return pointer % list.size();
     }
 
-    private int getNum(List<Integer> numbers, int pointer, int mode) {
-        int num;
+    private long getNum(List<Long> numbers, int pointer, int mode) {
+        long num;
         switch (mode) {
             case 0:
-                num = numbers.get(numbers.get(pointer));
+                num = numbers.get(Math.toIntExact(numbers.get(pointer)));
                 break;
             case 1:
                 num = numbers.get(pointer);
                 break;
             case 2:
-                num = numbers.get(numbers.get(pointer) + relativeBase);
+                num = numbers.get(Math.toIntExact(numbers.get(pointer) + relativeBase));
                 break;
             default:
                 throw new IllegalArgumentException("mode not supported: " + mode);
         }
         while (num > numbers.size()) {
-            numbers.add(0);
+            numbers.add(0L);
         }
         return num;
     }
 
-    public List<Integer> getIntComputerOutput() {
+    public List<Long> getIntComputerOutput() {
         return intComputerOutput;
     }
 
@@ -221,7 +222,7 @@ public class IntComputer extends Thread {
         running = false;
     }
 
-    public void setInputCode(int inputCode) {
+    public void setInputCode(long inputCode) {
         this.inputCode = inputCode;
     }
 
@@ -235,7 +236,7 @@ public class IntComputer extends Thread {
         }
     }
 
-    public int runCycle(int result) {
+    public long runCycle(long result) {
         setInputCode(result);
         setRunning();
         waitForIntcomputer();

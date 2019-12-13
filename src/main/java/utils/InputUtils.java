@@ -14,6 +14,14 @@ public class InputUtils {
                 .collect(Collectors.toList());
     }
 
+    public static List<Long> getLongsFromCSVInput(String input) {
+        return Arrays.stream(input.split(","))
+                .filter(s -> s.length() > 0)
+                .mapToLong(Long::parseLong)
+                .boxed()
+                .collect(Collectors.toList());
+    }
+
     public static List<String> getStringsFromCSVInput(String input) {
         return Arrays.stream(input.split(","))
                 .filter(s -> s.length() > 0)

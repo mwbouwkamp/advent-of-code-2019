@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 
 public class OpCode {
 
-    private int instruction;
+    private long instruction;
     private int modeInput1;
     private int modeInput2;
     private int modeResult;
 
-    public OpCode(int opCode) {
-        List<String> opCodeChars = Arrays.stream(Integer.toString(opCode).split("")).collect(Collectors.toList());
+    public OpCode(long opCode) {
+        List<String> opCodeChars = Arrays.stream(Long.toString(opCode).split("")).collect(Collectors.toList());
         instruction = Integer.parseInt(opCodeChars.remove(opCodeChars.size() - 1));
         if (opCodeChars.size() > 0) {
             instruction += 10 * Integer.parseInt(opCodeChars.remove(opCodeChars.size() - 1));
@@ -32,7 +32,7 @@ public class OpCode {
                 : 0;
     }
 
-    public int getInstruction() {
+    public long getInstruction() {
         return instruction;
     }
 

@@ -10,7 +10,7 @@ public class Day7 {
 
     public static void main(String[] args) throws FileNotFoundException {
         String input = FileUtils.getStringsFromInput("input7.txt").get(0);
-        List<Integer> numbers = InputUtils.getNumbersFromCSVInput(input);
+        List<Long> numbers = InputUtils.getLongsFromCSVInput(input);
 
 //        System.out.println("Solution 7.1: " + new SolverDay7(numbers, 5, 0).getMaxOutput());
 

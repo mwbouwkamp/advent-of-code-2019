@@ -7,13 +7,13 @@ import java.util.List;
 
 public class SolverDay9 {
 
-    List<Integer> numbers;
+    List<Long> numbers;
 
-    public SolverDay9(List<Integer> numbers) {
+    public SolverDay9(List<Long> numbers) {
         this.numbers = numbers;
     }
 
-    public List<Integer> solve() {
+    public List<Long> solve() {
         IntComputer intComputer = new IntComputer.IntComputerBuilder(numbers)
                 .inputCode(0)
                 .phaseSetting(0)

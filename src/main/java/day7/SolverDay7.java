@@ -1,6 +1,5 @@
 package day7;
 
-import utils.InputUtils;
 import utils.IntComputer;
 
 import java.util.ArrayList;
@@ -9,9 +8,9 @@ import java.util.List;
 public class SolverDay7 {
 
     List<List<Integer>> phaseSettingsCombinations;
-    List<Integer> numbers;
+    List<Long> numbers;
 
-    public SolverDay7(List<Integer> numbers, int phaseSettingsSize, int offset) {
+    public SolverDay7(List<Long> numbers, int phaseSettingsSize, int offset) {
         this.numbers = numbers;
         phaseSettingsCombinations = new ArrayList<>();
         initPhaseSettingsCombinations(phaseSettingsSize, offset);
@@ -47,15 +46,15 @@ public class SolverDay7 {
         }
     }
 
-    public int getMaxOutput() {
+    public long getMaxOutput() {
         return phaseSettingsCombinations.stream()
-                .mapToInt(ps -> getThrusterOutput(numbers, ps))
+                .mapToLong(ps -> getThrusterOutput(numbers, ps))
                 .max()
-                .orElse(-1);
+                .orElse(-1L);
     }
 
-    public int getThrusterOutput(List<Integer> numbers, List<Integer> phaseSettings) {
-        int amplifierInput = 0;
+    public long getThrusterOutput(List<Long> numbers, List<Integer> phaseSettings) {
+        long amplifierInput = 0;
         for (int phaseSetting: phaseSettings) {
             IntComputer intComputer = new IntComputer.IntComputerBuilder(numbers)
                     .inputCode(amplifierInput)
@@ -69,14 +68,14 @@ public class SolverDay7 {
         return amplifierInput;
     }
 
-    public int getMaxOutputWithFeedback() {
+    public long getMaxOutputWithFeedback() {
         return phaseSettingsCombinations.stream()
-                .mapToInt(ps -> getThrusterOutputWithFeedback(numbers, ps))
+                .mapToLong(ps -> getThrusterOutputWithFeedback(numbers, ps))
                 .max()
                 .orElse(-1);
     }
 
-    public int getThrusterOutputWithFeedback(List<Integer> numbers, List<Integer> phaseSettings) {
+    public long getThrusterOutputWithFeedback(List<Long> numbers, List<Integer> phaseSettings) {
         IntComputer intComputerA = new IntComputer.IntComputerBuilder(numbers)
                 .inputCode(0)
                 .phaseSetting(phaseSettings.get(0))
@@ -112,12 +111,12 @@ public class SolverDay7 {
                 .name("E")
                 .build();
         intComputerE.start();
-        int resultE = 0;
+        long resultE = 0;
         while(!intComputerA.hasTerminated()) {
-            int resultA = intComputerA.runCycle(resultE);
-            int resultB = intComputerB.runCycle(resultA);
-            int resultC = intComputerC.runCycle(resultB);
-            int resultD = intComputerD.runCycle(resultC);
+            long resultA = intComputerA.runCycle(resultE);
+            long resultB = intComputerB.runCycle(resultA);
+            long resultC = intComputerC.runCycle(resultB);
+            long resultD = intComputerD.runCycle(resultC);
             resultE = intComputerE.runCycle(resultD);
         }
         return resultE;
