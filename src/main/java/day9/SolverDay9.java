@@ -15,8 +15,8 @@ public class SolverDay9 {
 
     public List<Long> solve() {
         IntComputer intComputer = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(0)
-                .phaseSetting(0)
+                .inputCode(1)
+                .phaseSetting(1)
                 .build();
         intComputer.start();
         while (!intComputer.hasTerminated()) {

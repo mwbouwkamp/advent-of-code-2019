@@ -14,6 +14,15 @@ public class InputUtils {
                 .collect(Collectors.toList());
     }
 
+    public static List<Integer> getSingleDigitsFromString(String input) {
+        return Arrays.stream(input.split(""))
+                .parallel()
+                .filter(s -> s.length() > 0)
+                .mapToInt(Integer::parseInt)
+                .boxed()
+                .collect(Collectors.toList());
+    }
+
     public static List<Long> getLongsFromCSVInput(String input) {
         return Arrays.stream(input.split(","))
                 .filter(s -> s.length() > 0)
