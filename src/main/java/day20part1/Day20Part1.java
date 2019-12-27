@@ -1,4 +1,4 @@
-package day20;
+package day20part1;
 
 import utils.FileUtils;
 
@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Day20 {
+public class Day20Part1 {
     public static void main(String[] args) throws FileNotFoundException {
         List<String> input = FileUtils.getStringsFromInput("input20.txt");
         Maze maze = new MazeBuilder(input).build();

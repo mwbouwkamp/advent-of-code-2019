@@ -1,6 +1,4 @@
-package day20;
-
-import java.awt.*;
+package day20part1;
 
 public class Portal {
     private MazeNode mazeNodeIn;

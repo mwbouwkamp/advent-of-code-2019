@@ -1,4 +1,4 @@
-package day20;
+package day20part1;
 
 public class Maze {
     private MazeNode start;

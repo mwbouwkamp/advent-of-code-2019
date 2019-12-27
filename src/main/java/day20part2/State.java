@@ -1,4 +1,4 @@
-package day20;
+package day20part2;
 
 public class State implements Comparable<State> {
     MazeNode node;
@@ -11,7 +11,13 @@ public class State implements Comparable<State> {
 
     @Override
     public int compareTo(State otherState) {
-        return otherState.steps - this.steps;
+        if (otherState.getNode().getDepth() > getNode().getDepth()) {
+            return -1;
+        } else if (otherState.getNode().getDepth() < getNode().getDepth()) {
+            return 1;
+        } else {
+            return otherState.steps - this.steps;
+        }
     }
 
     @Override
