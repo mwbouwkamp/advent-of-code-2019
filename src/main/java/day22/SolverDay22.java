@@ -1,14 +1,30 @@
 package day22;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class SolverDay22 {
-    private int[] cards;
+    long dimension;
+    private Map<Long, Long> cards;
 
-    public SolverDay22(int dimension) {
-        this.cards = IntStream.range(0, dimension)
-                .toArray();
+    public SolverDay22(long dimension) {
+        this.dimension = dimension;
+        this.cards = LongStream.range(0, dimension)
+                .parallel()
+                .boxed()
+                .collect(Collectors.toMap(k -> k, k -> k));
+    }
+
+    public long solve(List<String> instructions, long card, long cycles) {
+        process(instructions);
+        for (long i = 0; i < cycles; i++) {
+            card = cards.get(card);
+//            System.out.println(cards.get(card));
+        }
+        return cards.get(card);
     }
 
     public void process(List<String> instructions) {
@@ -33,25 +49,22 @@ public class SolverDay22 {
         }
     }
 
-    public int[] dealWithIncrement(int[] cards, int increment) {
-        int[] newCards = new int[cards.length];
-        for (int i = 0; i < newCards.length; i ++) {
-            int ii = i * increment % newCards.length;
-            newCards[i * increment % newCards.length] = cards[i];
+    public Map<Long, Long> dealWithIncrement(Map<Long, Long> cards, int increment) {
+        Map<Long, Long> newCards = new HashMap<>();
+        for (long i = 0; i < dimension; i++) {
+            newCards.put(i * increment % dimension, cards.get(i));
         }
         return newCards;
     }
 
-    public int[] cut(int[] cards, int position) {
-        return IntStream.range(cards.length + position, 2 * cards.length + position)
-                .map(n -> cards[n % cards.length])
-                .toArray();
+    public Map<Long, Long> cut(Map<Long, Long> cards, int position) {
+        return cards.keySet().stream()
+                .collect(Collectors.toMap(k -> k, k -> cards.get((dimension + k + position) % dimension)));
     }
 
-    public int[] dealIntoNewStack(int[] cards) {
-        return IntStream.range(0, cards.length)
-                .map(n -> cards[cards.length - 1 - n])
-                .toArray();
+    public Map<Long, Long> dealIntoNewStack(Map<Long, Long> cards) {
+        return cards.keySet().stream()
+                .collect(Collectors.toMap(k -> k, k -> cards.get(dimension - 1 - k)));
     }
 
     public int getNumberFromInstruction(String instruction) {
@@ -59,14 +72,14 @@ public class SolverDay22 {
         return Integer.parseInt(instructionParts[instructionParts.length - 1]);
     }
 
-    public int[] getCards() {
+    public Map<Long, Long> getCards() {
         return cards;
     }
 
-    public int getPosition(int card) {
-        for (int i = 0; i < cards.length; i++) {
-            if (cards[i] == card) {
-                return i;
+    public long getPosition(long card) {
+        for (long key: cards.keySet()) {
+            if (cards.get(key) == card) {
+                return key;
             }
         }
         return -1;
