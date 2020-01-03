@@ -20,9 +20,9 @@ class OpCodeTest {
     void test_should_create_correct_opCode(int code, int expectedInstruction, int expectedModeInput1, int expectedModeInput2, int expectedModeResult) {
         OpCode opCode = new OpCode(code);
         assertEquals(expectedInstruction, opCode.getInstruction());
-        assertEquals(expectedModeInput1, opCode.getModeInput1());
-        assertEquals(expectedModeInput2, opCode.getModeInput2());
-        assertEquals(expectedModeResult, opCode.getModeResult());
+        assertEquals(expectedModeInput1, opCode.getMode1());
+        assertEquals(expectedModeInput2, opCode.getMode2());
+        assertEquals(expectedModeResult, opCode.getMode3());
     }
 
 }

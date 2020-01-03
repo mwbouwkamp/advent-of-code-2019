@@ -1,19 +1,15 @@
 package utils;
 
-import utils.InputUtils;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OpCode {
 
     private long instruction;
-    private int modeInput1;
-    private int modeInput2;
-    private int modeResult;
+    private int mode1;
+    private int mode2;
+    private int mode3;
 
     public OpCode(long opCode) {
         List<String> opCodeChars = Arrays.stream(Long.toString(opCode).split("")).collect(Collectors.toList());
@@ -21,13 +17,13 @@ public class OpCode {
         if (opCodeChars.size() > 0) {
             instruction += 10 * Integer.parseInt(opCodeChars.remove(opCodeChars.size() - 1));
         }
-        modeInput1 = opCodeChars.size() > 0
+        mode1 = opCodeChars.size() > 0
                 ? Integer.parseInt(opCodeChars.remove(opCodeChars.size() - 1))
                 : 0;
-        modeInput2 = opCodeChars.size() > 0
+        mode2 = opCodeChars.size() > 0
                 ? Integer.parseInt(opCodeChars.remove(opCodeChars.size() - 1))
                 : 0;
-        modeResult = opCodeChars.size() > 0
+        mode3 = opCodeChars.size() > 0
                 ? Integer.parseInt(opCodeChars.remove(opCodeChars.size() - 1))
                 : 0;
     }
@@ -36,15 +32,15 @@ public class OpCode {
         return instruction;
     }
 
-    public int getModeInput1() {
-        return modeInput1;
+    public int getMode1() {
+        return mode1;
     }
 
-    public int getModeInput2() {
-        return modeInput2;
+    public int getMode2() {
+        return mode2;
     }
 
-    public int getModeResult() {
-        return modeResult;
+    public int getMode3() {
+        return mode3;
     }
 }

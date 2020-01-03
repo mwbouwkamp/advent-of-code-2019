@@ -5,6 +5,8 @@ import utils.IntComputer;
 
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class SolverDay9 {
 
     List<Long> numbers;
@@ -15,12 +17,17 @@ public class SolverDay9 {
 
     public List<Long> solve() {
         IntComputer intComputer = new IntComputer.IntComputerBuilder(numbers)
-                .inputCode(1)
-                .phaseSetting(1)
+                .inputCode(2)
+                .phaseSetting(2)
                 .build();
         intComputer.start();
+        intComputer.runCycle(2);
         while (!intComputer.hasTerminated()) {
-            intComputer.runCycle(1);
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return intComputer.getIntComputerOutput();
     }

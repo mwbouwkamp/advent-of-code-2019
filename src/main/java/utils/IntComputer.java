@@ -11,7 +11,7 @@ public class IntComputer extends Thread {
     long maxPosition;
     private long inputCode;
     private long phaseSetting;
-    private long relativeBase;
+    private Long relativeBase;
     private boolean haltable;
     private String name;
 
@@ -26,7 +26,7 @@ public class IntComputer extends Thread {
         this.maxPosition = numbers.keySet().size();
         this.inputCode = inputCode;
         this.phaseSetting = phaseSetting;
-        this.relativeBase = 0;
+        this.relativeBase = 0L;
         this.haltable = haltable;
         this.name = name;
         this.intComputerOutput = new ArrayList<>();
@@ -84,42 +84,26 @@ public class IntComputer extends Thread {
                 boolean dontMovePointerAtEnd = false;
                 switch (opCodeInstution) {
                     case 1:
-                        pointer = movePosition(pointer);
-                        long firstNum = getNum(pointer, opCode.getModeInput1());
-                        pointer = movePosition(pointer);
-                        long secondNum = getNum(pointer, opCode.getModeInput2());
-                        pointer = movePosition(pointer);
-                        if ((opCode.getModeResult() == 0)) {
-                            numbers.put(numbers.get(pointer), firstNum + secondNum);
-                        } else {
-                            numbers.put(pointer, firstNum + secondNum);
-                        }
+                        long firstNum = getNum(++pointer, opCode.getMode1());
+                        long secondNum = getNum(++pointer, opCode.getMode2());
+                        setNum(++pointer, opCode.getMode3(), firstNum + secondNum);
                         break;
                     case 2:
-                        pointer = movePosition(pointer);
-                        firstNum = getNum(pointer, opCode.getModeInput1());
-                        pointer = movePosition(pointer);
-                        secondNum = getNum(pointer, opCode.getModeInput2());
-                        pointer = movePosition(pointer);
-                        if ((opCode.getModeResult() == 0)) {
-                            numbers.put(numbers.get(pointer), firstNum * secondNum);
-                        } else {
-                            numbers.put(pointer, firstNum * secondNum);
-                        }
+                        firstNum = getNum(++pointer, opCode.getMode1());
+                        secondNum = getNum(++pointer, opCode.getMode2());
+                        setNum(++pointer, opCode.getMode3(), firstNum * secondNum);
                         break;
                     case 3:
-                        pointer = movePosition(pointer);
                         if (phaseSettingUsed) {
-                            numbers.put(numbers.get(pointer), inputCode);
+                            setNum(++pointer, opCode.getMode1(), inputCode);
                         }
                         else {
-                            numbers.put(numbers.get(pointer), phaseSetting);
+                            setNum(++pointer, opCode.getMode1(), phaseSetting);
                             phaseSettingUsed = true;
                         }
                         break;
                     case 4:
-                        pointer = movePosition(pointer);
-                        long num = getNum(pointer, opCode.getModeInput1());
+                        long num = getNum(++pointer, opCode.getMode1());
                         intComputerOutput.add(num);
                         if (haltable) {
                             haltRunning();
@@ -129,56 +113,48 @@ public class IntComputer extends Thread {
                         }
                         break;
                     case 5:
-                        pointer = movePosition(pointer);
-                        firstNum = getNum(pointer, opCode.getModeInput1());
-                        pointer = movePosition(pointer);
-                        secondNum = getNum(pointer, opCode.getModeInput2());
+                        firstNum = getNum(++pointer, opCode.getMode1());
+                        secondNum = getNum(++pointer, opCode.getMode2());
                         if (firstNum != 0) {
-                            pointer = Math.toIntExact(secondNum);
+                            pointer = secondNum;
                             dontMovePointerAtEnd = true;
                         }
                         break;
                     case 6:
-                        pointer = movePosition(pointer);
-                        firstNum = getNum(pointer, opCode.getModeInput1());
-                        pointer = movePosition(pointer);
-                        secondNum = getNum(pointer, opCode.getModeInput2());
+                        firstNum = getNum(++pointer, opCode.getMode1());
+                        secondNum = getNum(++pointer, opCode.getMode2());
                         if (firstNum == 0) {
-                            pointer = Math.toIntExact(secondNum);
+                            pointer = secondNum;
                             dontMovePointerAtEnd = true;
                         }
                         break;
                     case 7:
-                        pointer = movePosition(pointer);
-                        firstNum = getNum(pointer, opCode.getModeInput1());
-                        pointer = movePosition(pointer);
-                        secondNum = getNum(pointer, opCode.getModeInput2());
-                        pointer = movePosition(pointer);
+                        firstNum = getNum(++pointer, opCode.getMode1());
+                        secondNum = getNum(++pointer, opCode.getMode2());
                         long toStore = firstNum < secondNum ? 1 : 0;
-                        numbers.put(numbers.get(pointer), toStore);
+                        setNum(++pointer, opCode.getMode3(), toStore);
                         break;
                     case 8:
-                        pointer = movePosition(pointer);
-                        firstNum = getNum(pointer, opCode.getModeInput1());
-                        pointer = movePosition(pointer);
-                        secondNum = getNum(pointer, opCode.getModeInput2());
-                        pointer = movePosition(pointer);
+                        firstNum = getNum(++pointer, opCode.getMode1());
+                        secondNum = getNum(++pointer, opCode.getMode2());
                         toStore = firstNum == secondNum ? 1 : 0;
-                        numbers.put(numbers.get(pointer), toStore);
+                        setNum(++pointer, opCode.getMode3(), toStore);
                         break;
                     case 9:
-                        pointer = movePosition(pointer);
-                        num = getNum(pointer, opCode.getModeInput1());
+                        num = getNum(++pointer, opCode.getMode1());
                         relativeBase += num;
                         break;
                     case 99:
                         terminated = true;
+                        synchronized (this) {
+                            notify();
+                        }
                         return;
                     default:
                         throw new IllegalArgumentException("Opcode not allowed: " + opCode.getInstruction());
                 }
                 if (!dontMovePointerAtEnd) {
-                    pointer = movePosition(pointer);
+                    pointer++;
                 }
             }
             else {
@@ -191,12 +167,23 @@ public class IntComputer extends Thread {
         }
     }
 
-    private long movePosition(long pointer) {
-        System.out.println(pointer);
-        return pointer > maxPosition ? 0 : ++pointer;
+    private void setNum(long pointer, int mode, long result) {
+        switch (mode) {
+            case 0:
+                numbers.put(numbers.get(pointer), result);
+                break;
+            case 1:
+                numbers.put(pointer, result);
+                break;
+            case 2:
+                numbers.put(numbers.get(pointer) + relativeBase, result);
+                break;
+            default:
+                throw new IllegalArgumentException("mode not supported: " + mode);
+        }
     }
 
-    private long getNum(long pointer, int mode) {
+    private long getNum(Long pointer, int mode) {
         Long num;
         switch (mode) {
             case 0:
@@ -213,7 +200,7 @@ public class IntComputer extends Thread {
                 num = numbers.get(numbers.get(pointer) + relativeBase);
                 if (null == num) {
                     num = 0L;
-                    numbers.put(numbers.get(pointer), 0L);
+                    numbers.put(numbers.get(pointer) + relativeBase, 0L);
                 }
                 break;
             default:
