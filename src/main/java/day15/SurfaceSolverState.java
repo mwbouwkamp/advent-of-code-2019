@@ -6,29 +6,30 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class State {
+public class SurfaceSolverState {
 
     private final List<Long> numbers;
     private final List<Long> instructions;
     private final Long status;
     private final Point location;
 
-    public State(List<Long> numbers) {
+    public SurfaceSolverState(List<Long> numbers) {
         this.numbers = numbers;
         this.instructions = new ArrayList<>();
         this.status = 1L;
         this.location = new Point(0, 0);
     }
 
-    public State(State previousState, long newInstruction) {
-        this.numbers = previousState.getNumbers();
-        this.instructions = new ArrayList<>(previousState.getInstructions());
+    public SurfaceSolverState(SurfaceSolverState previousSurfaceSolverState, long newInstruction) {
+        this.numbers = previousSurfaceSolverState.getNumbers();
+        this.instructions = new ArrayList<>(previousSurfaceSolverState.getInstructions());
         this.instructions.add(newInstruction);
         this.status = determineStatus();
         this.location = this.status != 0
-                ? determineLocation(previousState.getLocation(), newInstruction)
-                : new Point(previousState.getLocation());
+                ? determineLocation(previousSurfaceSolverState.getLocation(), newInstruction)
+                : new Point(previousSurfaceSolverState.getLocation());
     }
 
     public Point determineLocation(Point location, long instruction) {
@@ -73,19 +74,22 @@ public class State {
         return intComputer;
     }
 
-    public List<State> getChildren(List<State> history, int minSteps) {
-        List<State> children = new ArrayList<>();
-        for (long i = 1; i <= 4; i++) {
-            children.add(new State(this, i));
-        }
-        children = children.stream()
+    public List<SurfaceSolverState> getChildren(List<SurfaceSolverState> history, int minSteps) {
+        return IntStream.range(1, 5)
+                .mapToObj(i -> new SurfaceSolverState(this, i))
                 .filter(s -> s.lessSteps(minSteps))
                 .filter(s -> s.notVisitedWithLessSteps(history))
                 .collect(Collectors.toList());
-        return children;
     }
 
-    public boolean notVisitedWithLessSteps(List<State> history) {
+    public List<SurfaceSolverState> getChildren(List<SurfaceSolverState> history) {
+        return IntStream.range(1, 5)
+                .mapToObj(i -> new SurfaceSolverState(this, i))
+                .filter(s -> s.notVisitedWithLessSteps(history))
+                .collect(Collectors.toList());
+    }
+
+    public boolean notVisitedWithLessSteps(List<SurfaceSolverState> history) {
         int stepsHistory = history.stream()
                 .filter(s -> s.getLocation().equals(location))
                 .mapToInt(s -> s.getNumSteps())
