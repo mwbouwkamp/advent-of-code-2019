@@ -17,7 +17,6 @@ public class Cell {
     public void addChildren(List<Cell> cells) {
         this.children = cells.stream()
                 .filter(c -> c.isNeighBouring(location))
-                .filter(c -> c.getCharacter() == '#')
                 .collect(Collectors.toList());
     }
 
@@ -35,5 +34,10 @@ public class Cell {
 
     public char getCharacter() {
         return character;
+    }
+
+    @Override
+    public String toString() {
+        return location.toString() + " " + character;
     }
 }

@@ -17,6 +17,14 @@ public class Day17 {
         System.out.println(solverDay17.getNumIntersections());
         System.out.println(solverDay17.getSumAllignmentParameters());
 
+        input = FileUtils.getStringsFromInput("input17_2.txt").get(0);
+        numbers = InputUtils.getLongsFromCSVInput(input);
+        solverDay17 = new SolverDay17(numbers);
+        System.out.println(solverDay17.getPicture());
+        System.out.println(solverDay17.instructionsToVisitAll().toString());
+
+
+
 
     }
 

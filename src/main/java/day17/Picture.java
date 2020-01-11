@@ -14,7 +14,9 @@ public class Picture {
         String[] lines = stringRep.split("\n");
         for (int y = 0; y < lines.length; y++) {
             for (int x = 0; x < lines[y].length(); x++) {
-                cells.add(new Cell(new Point(x, y), lines[y].charAt(x)));
+                if (lines[y].charAt(x) == '#' || lines[y].charAt(x) == '^') {
+                    cells.add(new Cell(new Point(x, y), lines[y].charAt(x)));
+                }
             }
         }
         for (Cell cell: cells) {
