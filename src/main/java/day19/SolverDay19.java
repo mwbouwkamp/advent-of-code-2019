@@ -32,7 +32,7 @@ public class SolverDay19 {
             System.out.println(result + "; inRow: " + inRow + "; inColumn " + inColumn);
             shipFound = shipFound(result);
         }
-        return result;   //12820944 too high
+        return result;
     }
 
     private int inColumn(Point point) {
