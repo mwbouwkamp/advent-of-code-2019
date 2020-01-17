@@ -99,8 +99,7 @@ public class IntComputer extends Thread {
     public void run() {
         long pointer = 0;
         while (active) {
-            if (running)
-            {
+            if (running) {
                 OpCode opCode = new OpCode(numbers.get(pointer));
                 int opCodeInstution = Math.toIntExact(opCode.getInstruction());
                 boolean dontMovePointerAtEnd = false;
