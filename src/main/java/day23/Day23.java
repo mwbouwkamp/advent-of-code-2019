@@ -14,6 +14,5 @@ public class Day23 {
 
         SolverDay23 solverDay23 = new SolverDay23(numbers);
         System.out.println(solverDay23.solveDay23_1());
-
     }
 }

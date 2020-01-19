@@ -85,7 +85,7 @@ public class Reaction implements Comparable<Reaction> {
     }
 
     public boolean produces(String product) {
-        return out.keySet().contains(product);
+        return out.containsKey(product);
     }
 
     public Map<String, Integer> getIn() {
