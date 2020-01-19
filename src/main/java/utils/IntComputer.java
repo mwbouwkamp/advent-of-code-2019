@@ -10,8 +10,12 @@ public class IntComputer extends Thread {
     private Map<Long, Long> numbers;
     long maxPosition;
     private long inputCode;
+
     private boolean usesPhaseSetting;
     private long phaseSetting;
+    private boolean usesPhaseSetting2;
+    private long phaseSetting2;
+
     private Long relativeBase;
     private boolean haltable;
     private String name;
@@ -20,6 +24,7 @@ public class IntComputer extends Thread {
 
     private boolean running;
     private boolean phaseSettingUsed;
+    private boolean phaseSettingUsed2;
     private boolean terminated;
     private boolean active;
 
@@ -29,6 +34,23 @@ public class IntComputer extends Thread {
         this.inputCode = inputCode;
         this.usesPhaseSetting = true;
         this.phaseSetting = phaseSetting;
+        this.relativeBase = 0L;
+        this.haltable = haltable;
+        this.name = name;
+        this.intComputerOutput = new ArrayList<>();
+        phaseSettingUsed = false;
+        this.running = false;
+        this.active = true;
+    }
+
+    public IntComputer(Map<Long, Long> numbers, long inputCode, long phaseSetting, long phaseSetting2, boolean haltable, String name) {
+        this.numbers = numbers;
+        this.maxPosition = numbers.keySet().size();
+        this.inputCode = inputCode;
+        this.usesPhaseSetting = true;
+        this.phaseSetting = phaseSetting;
+        this.usesPhaseSetting2 = true;
+        this.phaseSetting2 = phaseSetting2;
         this.relativeBase = 0L;
         this.haltable = haltable;
         this.name = name;
@@ -57,6 +79,8 @@ public class IntComputer extends Thread {
         private long inputCode = 0;
         private boolean usesPhaseSetting = false;
         private long phaseSetting = 0;
+        private boolean usesPhaseSetting2 = false;
+        private long phaseSetting2 = 0;
         private boolean haltable = false;
         private String name = "";
 
@@ -78,6 +102,12 @@ public class IntComputer extends Thread {
             return this;
         }
 
+        public IntComputerBuilder phaseSetting2(long phaseSetting) {
+            this.phaseSetting2 = phaseSetting;
+            this.usesPhaseSetting2 = true;
+            return this;
+        }
+
         public IntComputerBuilder isHaltable() {
             this.haltable = true;
             return this;
@@ -89,9 +119,13 @@ public class IntComputer extends Thread {
         }
 
         public IntComputer build() {
-            return usesPhaseSetting
-                    ? new IntComputer(numbers, inputCode, phaseSetting, haltable, name)
-                    : new IntComputer(numbers, inputCode, haltable, name);
+            if (usesPhaseSetting & usesPhaseSetting2) {
+                return new IntComputer(numbers, inputCode, phaseSetting, phaseSetting2, haltable, name);
+            } else if (usesPhaseSetting) {
+                return new IntComputer(numbers, inputCode, phaseSetting, haltable, name);
+            } else {
+                return new IntComputer(numbers, inputCode, haltable, name);
+            }
         }
 
     }
@@ -115,16 +149,17 @@ public class IntComputer extends Thread {
                         setNum(++pointer, opCode.getMode3(), firstNum * secondNum);
                         break;
                     case 3:
-                        if (usesPhaseSetting) {
-                            if (phaseSettingUsed) {
-                                setNum(++pointer, opCode.getMode1(), inputCode);
-                            } else {
-                                setNum(++pointer, opCode.getMode1(), phaseSetting);
-                                phaseSettingUsed = true;
-                            }
+                        long toUse = inputCode;
+                        if (usesPhaseSetting && !phaseSettingUsed) {
+                            toUse = phaseSetting;
+                            phaseSettingUsed = true;
                         } else {
-                            setNum(++pointer, opCode.getMode1(), inputCode);
+                            if (usesPhaseSetting2 && !phaseSettingUsed2) {
+                                toUse = phaseSetting2;
+                                phaseSettingUsed2 = true;
+                            }
                         }
+                        setNum(++pointer, opCode.getMode1(), toUse);
                         break;
                     case 4:
                         long num = getNum(++pointer, opCode.getMode1());
@@ -275,6 +310,16 @@ public class IntComputer extends Thread {
 
     public void kill() {
         this.active = false;
+    }
+
+    public void receivePacket(Long x, Long y) {
+        running = false;
+        inputCode = -1;
+        phaseSetting = x;
+        phaseSetting2 = y;
+        phaseSettingUsed2 = false;
+        phaseSettingUsed = false;
+        running = true;
     }
 
 }

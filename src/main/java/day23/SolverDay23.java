@@ -34,44 +34,59 @@ public class SolverDay23 {
             IntComputer intComputer = new IntComputer.IntComputerBuilder(numbers)
                     .inputCode(-1)
                     .phaseSetting(i)
+                    .phaseSetting2(-1)
                     .name(i + "")
                     .build();
             intComputer.setRunning();
             intComputer.start();
             intComputerMap.put(i, intComputer);
         }
-        for (long i = 0; i < 50; i++) {
-            messages.add(new Message(i, -1, -1));
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        boolean val255;
+        for (long i = 0; i < 50; i++) {
+            getMessagesFromIntComputer(i);
+        }
         Message message;
         while (true) {
+            for (long i = 0; i < 50; i++) {
+                getMessagesFromIntComputer(i);
+            }
             message = messages.remove(0);
-            val255 = message.address == 255L;
-            if (val255) {
+            if (message.address == 255L) {
                 break;
             }
             IntComputer intComputer = intComputerMap.get(message.address);
-            intComputer.setInputCode(message.x);
+            intComputer.receivePacket(message.x, message.y);
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            int numProcessed = numProcessedMap.get(message.address);
-            for (int j = numProcessed; j < intComputer.getIntComputerOutput().size(); j = j + 3) {
-                Message newMessage = new Message(
-                        intComputer.getIntComputerOutput().get(j),
-                        intComputer.getIntComputerOutput().get(j + 1),
-                        intComputer.getIntComputerOutput().get(j + 2)
-                );
-                messages.add(newMessage);
-            }
-            System.out.println(messages.size() + " -> " + messages);
-            numProcessedMap.put(message.address, intComputer.getIntComputerOutput().size());
+            getMessagesFromIntComputer(message.address);
         }
         System.out.println("end");
         return message.y;
+    }
+
+    private void getMessagesFromIntComputer(Long address) {
+        int numProcessed = numProcessedMap.get(address);
+        List<Long> currentOutput;
+        do {
+            currentOutput = new ArrayList<>(intComputerMap.get(address).getIntComputerOutput());
+        } while ((currentOutput.size() - numProcessed) % 3 != 0);
+        for (int j = numProcessed; j < currentOutput.size(); j = j + 3) {
+            Message newMessage = new Message(
+                    currentOutput.get(j),
+                    currentOutput.get(j + 1),
+                    currentOutput.get(j + 2)
+            );
+            messages.add(newMessage);
+        }
+        System.out.println(messages.size() + " -> " + messages);
+        numProcessedMap.put(address, currentOutput.size());
     }
 
     private class Message {
