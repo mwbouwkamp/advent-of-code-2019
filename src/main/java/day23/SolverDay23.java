@@ -32,9 +32,9 @@ public class SolverDay23 {
     public long solveDay23_1() {
         for (long i = 0; i < 50; i++) {
             IntComputer intComputer = new IntComputer.IntComputerBuilder(numbers)
-                    .inputCode(-1)
+                    .inputCode(-1L)
                     .phaseSetting(i)
-                    .phaseSetting2(-1)
+                    .phaseSetting2(-1L)
                     .name(i + "")
                     .build();
             intComputer.setRunning();
@@ -54,9 +54,12 @@ public class SolverDay23 {
             for (long i = 0; i < 50; i++) {
                 getMessagesFromIntComputer(i);
             }
+            System.out.print(messages.size() + " ");
             message = messages.remove(0);
             if (message.address == 255L) {
-                break;
+                System.out.println("\nNAT: " + message.y);
+                killAll();
+                return message.y;
             }
             IntComputer intComputer = intComputerMap.get(message.address);
             intComputer.receivePacket(message.x, message.y);
@@ -67,8 +70,6 @@ public class SolverDay23 {
             }
             getMessagesFromIntComputer(message.address);
         }
-        System.out.println("end");
-        return message.y;
     }
 
     private void getMessagesFromIntComputer(Long address) {
@@ -85,8 +86,13 @@ public class SolverDay23 {
             );
             messages.add(newMessage);
         }
-        System.out.println(messages.size() + " -> " + messages);
         numProcessedMap.put(address, currentOutput.size());
+    }
+
+    private void killAll() {
+        for (IntComputer intcomputer: intComputerMap.values()) {
+            intcomputer.kill();
+        }
     }
 
     private class Message {
