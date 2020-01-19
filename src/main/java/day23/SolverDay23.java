@@ -3,10 +3,9 @@ package day23;
 import utils.IntComputer;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
@@ -50,16 +49,33 @@ public class SolverDay23 {
             getMessagesFromIntComputer(i);
         }
         Message message;
+        long prevYNat = Long.MIN_VALUE;
         while (true) {
             for (long i = 0; i < 50; i++) {
                 getMessagesFromIntComputer(i);
             }
-            System.out.print(messages.size() + " ");
             message = messages.remove(0);
+            System.out.print(message + " | ");
+            if (message.receivedFrom255) {
+                if (message.y == prevYNat) {
+                    killAll();
+                    System.out.println("\nFrom NAT: " + message.y);
+                    return message.y; //15089 too high
+                } else {
+                    prevYNat = message.y;
+                }
+            }
             if (message.address == 255L) {
-                System.out.println("\nNAT: " + message.y);
-                killAll();
-                return message.y;
+                System.out.println();
+                messages = messages.stream()
+                        .filter(m -> m.address != 255L)
+                        .collect(Collectors.toList());
+                messages.add(new Message(0, message.x, message.y, true));
+                if (messages.size() == 0) {
+                    System.out.println("EMPTY");
+                }
+                message = messages.remove(0);
+                System.out.print(message + " | ");
             }
             IntComputer intComputer = intComputerMap.get(message.address);
             intComputer.receivePacket(message.x, message.y);
@@ -84,6 +100,11 @@ public class SolverDay23 {
                     currentOutput.get(j + 1),
                     currentOutput.get(j + 2)
             );
+            if (newMessage.address == 255L) {
+                messages = messages.stream()
+                        .filter(m -> m.address != 255L)
+                        .collect(Collectors.toList());
+            }
             messages.add(newMessage);
         }
         numProcessedMap.put(address, currentOutput.size());
@@ -99,11 +120,20 @@ public class SolverDay23 {
         long address;
         long x;
         long y;
+        boolean receivedFrom255;
 
         public Message(long address, long x, long y) {
             this.address = address;
             this.x = x;
             this.y = y;
+            this.receivedFrom255 = false;
+        }
+
+        public Message(long address, long x, long y, boolean receivedFrom255) {
+            this.address = address;
+            this.x = x;
+            this.y = y;
+            this.receivedFrom255 = receivedFrom255;
         }
 
         @Override
